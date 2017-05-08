@@ -41,22 +41,26 @@ var Engine = (function(global) {
          */
         var now = Date.now(),
             dt = (now - lastTime) / 1000.0;
-
-        /* Call our update/render functions, pass along the time delta to
-         * our update function since it may be used for smooth animation.
-         */
-        update(dt);
-        render();
-
-        /* Set our lastTime variable which is used to determine the time delta
-         * for the next time this function is called.
-         */
         lastTime = now;
 
-        /* Use the browser's requestAnimationFrame function to call this
-         * function again as soon as the browser is able to draw another frame.
-         */
-        win.requestAnimationFrame(main);
+
+          /* Call our update/render functions, pass along the time delta to
+          * our update function since it may be used for smooth animation.
+          */
+          if (!pause) {
+            update(dt);
+          }
+          render();
+
+          /* Set our lastTime variable which is used to determine the time delta
+          * for the next time this function is called.
+          */
+          lastTime = now;
+
+          /* Use the browser's requestAnimationFrame function to call this
+          * function again as soon as the browser is able to draw another frame.
+          */
+          win.requestAnimationFrame(main);
     }
 
     /* This function does some initial setup that should only occur once,
@@ -79,6 +83,7 @@ var Engine = (function(global) {
      * on the entities themselves within your app.js file).
      */
     function update(dt) {
+        //console.log("update dt:" + dt);
         updateEntities(dt);
         // checkCollisions();
     }
@@ -171,6 +176,8 @@ var Engine = (function(global) {
         'images/water-block.png',
         'images/grass-block.png',
         'images/enemy-bug.png',
+        //'images/enemy-bug-debug.png',
+        //'images/char-boy-debug.png',
         'images/char-boy.png'
     ]);
     Resources.onReady(init);
