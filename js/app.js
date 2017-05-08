@@ -83,7 +83,7 @@ Player.prototype.getImg = function() {
     return Resources.get(this.sprite);
 };
 
-Player.prototype.update = function(x, y) {
+Player.prototype.update = function() {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
@@ -105,10 +105,6 @@ Player.prototype.update = function(x, y) {
             this.y = this.y + ymove;
         }
         ymove = 0;
-    }
-
-    if (typeof y !== 'undefined' && y !== null) {
-        this.y = this.y + y;
     }
 };
 
