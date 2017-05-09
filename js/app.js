@@ -1,3 +1,5 @@
+'use strict';
+
 // Enemies our player must avoid
 var Enemy = function() {
     // Variables applied to each of our instances go here,
@@ -6,7 +8,7 @@ var Enemy = function() {
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
-    this.x = 2;
+    this.x = -100;
     this.y = randomElement(yPos);
     this.speed = randomElement(speeds);
 
@@ -39,6 +41,7 @@ Enemy.prototype.update = function(dt) {
     //check collision
     if (collides(player, this)) {
         failureSnd.play();
+        //pause = true; // debug
         player.reset();
     }
 
@@ -46,13 +49,14 @@ Enemy.prototype.update = function(dt) {
 
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+    ctx.drawImage(this.getImg(), this.x, this.y);
 };
 
+// get sprite x,y coord of rigth botton
 Enemy.prototype.getBoxCoord = function() {
     var img = this.getImg();
-    var r = this.x + img.width;
-    var b = this.y + img.height;
+    var r = this.x + img.width; // x rigth
+    var b = this.y + img.height; // y botton
     return {
         r: r,
         b: b
@@ -60,13 +64,15 @@ Enemy.prototype.getBoxCoord = function() {
 };
 
 // player
-const PLAYER_INIT_X = 2;
-const PLAYER_INIT_Y = 420;
-const PLAYER_X_STEP = 100;
-const PLAYER_Y_STEP = 80;
+// constants
+var PLAYER_INIT_X = 2;
+var PLAYER_INIT_Y = 420;
+var PLAYER_X_STEP = 100;
+var PLAYER_Y_STEP = 80;
+
 var Player = function() {
     this.sprite = 'images/char-boy.png';
-    this.spriteImg = Resources.get(this.sprite);
+    this.spriteImg = this.getImg();
     this.x = PLAYER_INIT_X;
     this.y = PLAYER_INIT_Y;
     this.speed = PLAYER_X_STEP;
@@ -91,11 +97,11 @@ Player.prototype.update = function() {
     if (typeof xmove !== 'undefined' && xmove !== null && xmove !== 0) {
         //console.log("x:"+this.x)
         this.x = this.x + xmove;
-        if (this.x > 480) { // check bounds
-            this.x = -80;
+        if (this.x > 480) { // check bounds , rigth
+          this.x = 420;
         }
-        if (this.x < -80) { // check bounds
-            this.x = 480;
+        if (this.x < -20) { // check bounds , left
+            this.x = -16;
         }
         xmove = 0;
     }
@@ -149,7 +155,7 @@ Player.prototype.render = function() {
     showScore();
 };
 
-
+// get sprite x,y coord of rigth botton
 Player.prototype.getBoxCoord = function() {
     var img = this.getImg();
     var r = this.x + img.width;
@@ -184,8 +190,14 @@ function collides(pl, eny) {
 
     // collision code adapted from http://jlongster.com/Making-Sprite-based-Games-with-Canvas
 
-    var collision = !(r - 17 <= x2 || x + 19 > r2 ||
+    var collision = !(r - 29 <= x2 || x + 29 > r2 ||
         b <= y2 || y > b2);
+    // if (collision) {
+    //   console.log("r - 17:"+ (r - 17) + " x2:"+x2);
+    //   console.log("x + 19:"+ (x + 19) + " r2:"+r2);
+    //   console.log("b:"+ b + " y2:"+y2);
+    //   console.log("y:"+ y + " b2:"+b2);
+    // }
     return collision;
 }
 
